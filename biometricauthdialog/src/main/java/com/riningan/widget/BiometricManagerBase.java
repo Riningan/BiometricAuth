@@ -6,11 +6,11 @@ import androidx.annotation.NonNull;
 
 
 abstract public class BiometricManagerBase {
-    protected Context mContext;
-    protected String mTitle;
-    protected String mSubtitle;
-    protected String mDescription;
-    protected String mNegativeButtonText;
+    Context mContext;
+    String mTitle;
+    String mSubtitle;
+    String mDescription;
+    String mNegativeButtonText;
 
 
     BiometricManagerBase(final BiometricBuilder biometricBuilder) {
@@ -41,7 +41,6 @@ abstract public class BiometricManagerBase {
         }
         displayBiometricDialog(biometricCallback);
     }
-
 
 
     protected abstract void displayBiometricDialog(@NonNull final BiometricCallback biometricCallback);

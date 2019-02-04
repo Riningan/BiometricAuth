@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements BiometricCallback
                         .setTitle(getString(R.string.biometric_title))
                         .setSubtitle(getString(R.string.biometric_subtitle))
                         .setDescription(getString(R.string.biometric_description))
-                        .setNegativeButtonText(getString(R.string.biometric_negative_button_text))
+                        .setNegativeButtonText(getString(android.R.string.cancel))
                         .build()
                         .authenticate(MainActivity.this);
             }
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements BiometricCallback
 
     @Override
     public void onAuthenticationFailed() {
-//        Toast.makeText(getApplicationContext(), getString(R.string.biometric_failure), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.biometric_failure), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -71,11 +71,11 @@ public class MainActivity extends AppCompatActivity implements BiometricCallback
 
     @Override
     public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
-//        Toast.makeText(getApplicationContext(), helpString, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), helpString, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onAuthenticationError(int errorCode, CharSequence errString) {
-//        Toast.makeText(getApplicationContext(), errString, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), errString, Toast.LENGTH_LONG).show();
     }
 }

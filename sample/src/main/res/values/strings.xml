@@ -6,8 +6,6 @@
     <string name="biometric_title">Login</string>
     <string name="biometric_subtitle">Login to your Osta account</string>
     <string name="biometric_description">Place your finger on the device home button to verify your identity</string>
-    <string name="biometric_negative_button_text">CANCEL</string>
-
 
     <string name="biometric_error_sdk_not_supported">Sdk version not supported</string>
     <string name="biometric_error_hardware_not_supported">Device does not support biometric authentication</string>
