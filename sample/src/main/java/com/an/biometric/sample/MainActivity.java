@@ -5,30 +5,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.an.biometric.BiometricCallback;
-import com.an.biometric.BiometricManager;
+import com.riningan.widget.BiometricBuilder;
+import com.riningan.widget.BiometricCallback;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+
 public class MainActivity extends AppCompatActivity implements BiometricCallback {
-
-    private Button button;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.btn_authenticate);
+        Button button = findViewById(R.id.btnAuthenticate);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                /*
-                 *
-                 * */
-                new BiometricManager.BiometricBuilder(MainActivity.this)
+                new BiometricBuilder(getApplicationContext())
                         .setTitle(getString(R.string.biometric_title))
                         .setSubtitle(getString(R.string.biometric_subtitle))
                         .setDescription(getString(R.string.biometric_description))
@@ -58,11 +52,6 @@ public class MainActivity extends AppCompatActivity implements BiometricCallback
     @Override
     public void onBiometricAuthenticationPermissionNotGranted() {
         Toast.makeText(getApplicationContext(), getString(R.string.biometric_error_permission_not_granted), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onBiometricAuthenticationInternalError(String error) {
-        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
     }
 
     @Override

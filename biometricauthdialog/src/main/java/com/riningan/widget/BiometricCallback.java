@@ -10,9 +10,6 @@ public interface BiometricCallback {
 
     void onBiometricAuthenticationPermissionNotGranted();
 
-    void onBiometricAuthenticationInternalError(String error);
-
-
     void onAuthenticationFailed();
 
     void onAuthenticationCancelled();

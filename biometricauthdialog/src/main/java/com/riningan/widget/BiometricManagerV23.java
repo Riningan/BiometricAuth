@@ -1,13 +1,13 @@
 package com.riningan.widget;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
+import android.text.TextUtils;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -25,28 +25,36 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+import androidx.annotation.NonNull;
+
 
 @TargetApi(Build.VERSION_CODES.M)
-public class BiometricManagerV23 {
+public class BiometricManagerV23 extends BiometricManagerBase {
     private static final String KEY_NAME = UUID.randomUUID().toString();
 
 
-    protected Context context;
-
-    protected String title;
-    protected String subtitle;
-    protected String description;
-    protected String negativeButtonText;
-
-    private BiometricDialogV23 biometricDialogV23;
+    private BiometricDialogV23 mBiometricDialogV23;
 
 
-    public void displayBiometricPromptV23(final BiometricCallback biometricCallback) {
+    BiometricManagerV23(BiometricBuilder biometricBuilder) {
+        super(biometricBuilder);
+    }
+
+
+    @Override
+    protected void displayBiometricDialog(@NonNull final BiometricCallback biometricCallback) {
+        if (TextUtils.isEmpty(mTitle)) {
+            throw new IllegalArgumentException("Title must be set and non-empty");
+        }
+        if (TextUtils.isEmpty(mNegativeButtonText)) {
+            throw new IllegalArgumentException("Negative text must be set and non-empty");
+        }
+
         KeyStore keyStore = generateKey();
         Cipher cipher = initCipher(keyStore);
         if (cipher != null) {
             FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-            FingerprintManager fingerprintManager = BiometricUtils.getFingerPrintManager(context);
+            FingerprintManager fingerprintManager = BiometricUtils.getFingerPrintManager(mContext);
             fingerprintManager.authenticate(cryptoObject, new CancellationSignal(), 0,
                     new FingerprintManager.AuthenticationCallback() {
                         @Override
@@ -73,36 +81,33 @@ public class BiometricManagerV23 {
                         @Override
                         public void onAuthenticationFailed() {
                             super.onAuthenticationFailed();
-                            updateStatus(context.getString(R.string.biometric_failed));
+                            updateStatus(mContext.getString(R.string.biometric_failed));
                             biometricCallback.onAuthenticationFailed();
                         }
                     }, null);
 
-            displayBiometricDialog(biometricCallback);
+            mBiometricDialogV23 = new BiometricDialogV23(mContext, biometricCallback);
+            mBiometricDialogV23.setTitle(mTitle);
+            mBiometricDialogV23.setSubtitle(mSubtitle);
+            mBiometricDialogV23.setDescription(mDescription);
+            mBiometricDialogV23.setButtonText(mNegativeButtonText);
+            mBiometricDialogV23.show();
         }
     }
 
 
-    private void displayBiometricDialog(final BiometricCallback biometricCallback) {
-        biometricDialogV23 = new BiometricDialogV23(context, biometricCallback);
-        biometricDialogV23.setTitle(title);
-        biometricDialogV23.setSubtitle(subtitle);
-        biometricDialogV23.setDescription(description);
-        biometricDialogV23.setButtonText(negativeButtonText);
-        biometricDialogV23.show();
-    }
-
     private void dismissDialog() {
-        if (biometricDialogV23 != null) {
-            biometricDialogV23.dismiss();
+        if (mBiometricDialogV23 != null) {
+            mBiometricDialogV23.dismiss();
         }
     }
 
     private void updateStatus(String status) {
-        if (biometricDialogV23 != null) {
-            biometricDialogV23.updateStatus(status);
+        if (mBiometricDialogV23 != null) {
+            mBiometricDialogV23.updateStatus(status);
         }
     }
+
 
     private KeyStore generateKey() {
         KeyStore keyStore;

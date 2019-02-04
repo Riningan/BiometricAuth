@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.riningan.biometric.sample"
+        applicationId "com.riningan.biometricauthdialog.sample"
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
@@ -13,6 +13,6 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'com.google.android.material:material:1.1.0-alpha02'
-    implementation project(':biometricauth')
+    implementation 'com.google.android.material:material:1.1.0-alpha03'
+    implementation project(':biometricauthdialog')
 }

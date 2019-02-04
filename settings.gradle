@@ -1,1 +1,1 @@
-include ':sample', ':biometricauth'
+include ':sample', ':biometricauthdialog'
