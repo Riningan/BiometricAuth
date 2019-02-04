@@ -1,7 +1,7 @@
-package com.an.biometric;
+package com.riningan.widget;
+
 
 public interface BiometricCallback {
-
     void onSdkVersionNotSupported();
 
     void onBiometricAuthenticationNotSupported();

@@ -1,0 +1,40 @@
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayRepo = 'AndroidMaven'
+    bintrayName = 'BiometricAuth'
+
+    publishedGroupId = 'com.riningan.widget'
+    libraryName = 'BiometricAuth'
+    artifact = 'biometricauth'
+
+    libraryDescription = 'Add Biometric Authentication to any Android app.'
+
+    siteUrl = 'https://github.com/Riningan/BiometricAuth'
+    gitUrl = 'https://github.com/Riningan/BiometricAuth.git'
+
+    libraryVersion = '1.0'
+
+    developerId = 'Riningan'
+    developerName = 'Vadim Akhmarov'
+    developerEmail = 'riningan@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    implementation 'com.google.android.material:material:1.1.0-alpha02'
+}

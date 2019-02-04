@@ -1,4 +1,4 @@
-package com.an.biometric;
+package com.riningan.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -9,11 +9,10 @@ import android.os.CancellationSignal;
 
 import androidx.annotation.NonNull;
 
+
 public class BiometricManager extends BiometricManagerV23 {
-
-
     protected BiometricManager(final BiometricBuilder biometricBuilder) {
-        this.context = biometricBuilder.context;
+        this.context = biometricBuilder.mContext;
         this.title = biometricBuilder.title;
         this.subtitle = biometricBuilder.subtitle;
         this.description = biometricBuilder.description;
@@ -22,39 +21,35 @@ public class BiometricManager extends BiometricManagerV23 {
 
 
     public void authenticate(@NonNull final BiometricCallback biometricCallback) {
-
-        if(title == null) {
+        if (title == null) {
             biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog title cannot be null");
         }
 
-
-        if(subtitle == null) {
+        if (subtitle == null) {
             biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog subtitle cannot be null");
         }
 
-
-        if(description == null) {
+        if (description == null) {
             biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog description cannot be null");
         }
 
-        if(negativeButtonText == null) {
+        if (negativeButtonText == null) {
             biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog negative button text cannot be null");
         }
 
-
-        if(!BiometricUtils.isSdkVersionSupported()) {
+        if (!BiometricUtils.isSdkVersionSupported()) {
             biometricCallback.onSdkVersionNotSupported();
         }
 
-        if(!BiometricUtils.isPermissionGranted(context)) {
+        if (!BiometricUtils.isPermissionGranted(context)) {
             biometricCallback.onBiometricAuthenticationPermissionNotGranted();
         }
 
-        if(!BiometricUtils.isHardwareSupported(context)) {
+        if (!BiometricUtils.isHardwareSupported(context)) {
             biometricCallback.onBiometricAuthenticationNotSupported();
         }
 
-        if(!BiometricUtils.isFingerprintAvailable(context)) {
+        if (!BiometricUtils.isFingerprintAvailable(context)) {
             biometricCallback.onBiometricAuthenticationNotAvailable();
         }
 
@@ -62,15 +57,13 @@ public class BiometricManager extends BiometricManagerV23 {
     }
 
 
-
     private void displayBiometricDialog(BiometricCallback biometricCallback) {
-        if(BiometricUtils.isBiometricPromptEnabled()) {
+        if (BiometricUtils.isBiometricPromptEnabled()) {
             displayBiometricPrompt(biometricCallback);
         } else {
             displayBiometricPromptV23(biometricCallback);
         }
     }
-
 
 
     @TargetApi(Build.VERSION_CODES.P)
@@ -79,29 +72,34 @@ public class BiometricManager extends BiometricManagerV23 {
                 .setTitle(title)
                 .setSubtitle(subtitle)
                 .setDescription(description)
-                .setNegativeButton(negativeButtonText, context.getMainExecutor(), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        biometricCallback.onAuthenticationCancelled();
-                    }
-                })
+                .setNegativeButton(negativeButtonText
+                        , context.getMainExecutor()
+                        , new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                biometricCallback.onAuthenticationCancelled();
+                            }
+                        })
                 .build()
-                .authenticate(new CancellationSignal(), context.getMainExecutor(),
-                        new BiometricCallbackV28(biometricCallback));
+                .authenticate(new CancellationSignal()
+                        , context.getMainExecutor()
+                        , new BiometricCallbackV28(biometricCallback));
     }
 
 
     public static class BiometricBuilder {
-
         private String title;
         private String subtitle;
         private String description;
         private String negativeButtonText;
 
-        private Context context;
+        private Context mContext;
+
+
         public BiometricBuilder(Context context) {
-            this.context = context;
+            mContext = context;
         }
+
 
         public BiometricBuilder setTitle(@NonNull final String title) {
             this.title = title;
