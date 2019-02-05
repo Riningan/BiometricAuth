@@ -10,6 +10,7 @@ import android.os.Build;
 import androidx.core.app.ActivityCompat;
 
 
+@SuppressWarnings("deprecation")
 @SuppressLint({"MissingPermission"})
 public class BiometricUtils {
     public static boolean isBiometricPromptEnabled() {
@@ -54,8 +55,13 @@ public class BiometricUtils {
      * installs the app on their device.
      */
     public static boolean isPermissionGranted(Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) ==
-                PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_BIOMETRIC) ==
+                    PackageManager.PERMISSION_GRANTED;
+        } else {
+            return ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) ==
+                    PackageManager.PERMISSION_GRANTED;
+        }
     }
 
 
