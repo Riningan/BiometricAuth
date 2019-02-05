@@ -1,36 +1,34 @@
-# Biometric-Auth-Sample
-Add Biometric Authentication to any Android app</br>
+# BiometricAuthDialog
+Add Biometric Authentication Dialog to any Android app</br>
 
 This library provides an easy way to implement fingerprint authentication without having to deal with all the boilerplate stuff going on inside.
 
-<img src="https://img.shields.io/badge/API-23%2B-blue.svg?style=flat" style="max-width:100%;" alt="API" data-canonical-src="https://img.shields.io/badge/API-23%2B-blue.svg?style=flat" style="max-width:100%;">
 
+USAGE
+---
 
-<p><a href="https://github.com/anitaa1990/Biometric-Auth-Sample/blob/master/media/1.png" target="_blank"><img src="https://github.com/anitaa1990/Biometric-Auth-Sample/blob/master/media/1.png" width="250" style="max-width:100%;"></a></p>
-</br></br></br>
-
-
-
-<h2>How to integrate the library in your app?</h2>
-<b>Gradle Dependecy</b></br>
+1. Include the library
 
 ```gradle
 dependencies {
-        implementation(group: 'com.an.biometric', name: 'biometric-auth', version: '0.1.0', ext: 'aar', classifier: '')
+        implementation 'com.riningan.widget:biometricauthdialog:1.0'
 }
 ```
 
-<h2>Usage</h2>
+2. Build dialog
 
 ```
-new BiometricManager.BiometricBuilder(MainActivity.this)
+new BiometricBuilder(MainActivity.this)
                         .setTitle("Add a title")
                         .setSubtitle("Add a subtitle")
                         .setDescription("Add a description")
                         .setNegativeButtonText("Add a cancel button")
+                        .setHelpMessage("Add help message only for pre AndroidP")
                         .build()
                         .authenticate(biometricCallback);
 ```
+
+3. Implement callback
 
 The ```BiometricCallback``` class has the following callback methods:
 
@@ -62,14 +60,6 @@ new BiometricCallback() {
                       /*  
                        *  android.permission.USE_BIOMETRIC permission is not granted to the app
                        */
-               }
-
-               @Override
-               public void onBiometricAuthenticationInternalError(String error) {
-                     /*  
-                      *  This method is called if one of the fields such as the title, subtitle, 
-                      * description or the negative button text is empty
-                      */
                }
 
                @Override
@@ -117,4 +107,17 @@ new BiometricCallback() {
 ```
 
 
+LICENCE
+-----
 
+  	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	
+	   http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
