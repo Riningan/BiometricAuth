@@ -41,6 +41,12 @@ public class BiometricManagerV23 extends BiometricManagerBase {
     private BiometricDialogV23 mBiometricDialogV23;
 
     private Handler mResetHelpMessageHandler = new Handler();
+    private Runnable mResetHelpMessage = new Runnable() {
+        @Override
+        public void run() {
+            setHelpMessage(mHelpMessage);
+        }
+    };
 
 
     BiometricManagerV23(BiometricBuilder biometricBuilder) {
@@ -70,19 +76,26 @@ public class BiometricManagerV23 extends BiometricManagerBase {
                         @Override
                         public void onAuthenticationError(int errMsgId, CharSequence errString) {
                             super.onAuthenticationError(errMsgId, errString);
-                            // ignore: Fingerprint operation canceled.
-                            if (errMsgId != 5) {
-                                setErrorMessage(String.valueOf(errString));
-                                biometricCallback.onAuthenticationError(errMsgId, errString);
-                                if (errMsgId == 9) {
+                            switch (errMsgId) {
+                                case FingerprintManager.FINGERPRINT_ERROR_CANCELED:
+                                case FingerprintManager.FINGERPRINT_ERROR_USER_CANCELED:
+                                    // ignore: Fingerprint operation canceled.
+                                    return;
+                                case FingerprintManager.FINGERPRINT_ERROR_LOCKOUT:
+                                case FingerprintManager.FINGERPRINT_ERROR_LOCKOUT_PERMANENT:
+                                    setErrorMessage(String.valueOf(errString), false);
                                     mResetHelpMessageHandler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
                                             dismissDialog();
                                         }
                                     }, HIDE_DIALOG_DELAY);
-                                }
+                                    break;
+                                default:
+                                    setErrorMessage(String.valueOf(errString), true);
+                                    break;
                             }
+                            biometricCallback.onAuthenticationError(errMsgId, errString);
                         }
 
                         @Override
@@ -102,7 +115,7 @@ public class BiometricManagerV23 extends BiometricManagerBase {
                         @Override
                         public void onAuthenticationFailed() {
                             super.onAuthenticationFailed();
-                            setErrorMessage(authenticationFailedText);
+                            setErrorMessage(authenticationFailedText, true);
                             biometricCallback.onAuthenticationFailed();
                         }
                     }, null);
@@ -141,20 +154,18 @@ public class BiometricManagerV23 extends BiometricManagerBase {
     }
 
 
-    private void setErrorMessage(String status) {
+    private void setErrorMessage(String status, Boolean andReturnHelpMessage) {
         if (mBiometricDialogV23 != null) {
             mBiometricDialogV23.setErrorMessage(status);
-            mResetHelpMessageHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setHelpMessage(mHelpMessage);
-                }
-            }, HIDE_DIALOG_DELAY);
+            if (andReturnHelpMessage) {
+                mResetHelpMessageHandler.postDelayed(mResetHelpMessage, HIDE_DIALOG_DELAY);
+            }
         }
     }
 
     private void setHelpMessage(String status) {
         if (mBiometricDialogV23 != null) {
+            mResetHelpMessageHandler.removeCallbacks(mResetHelpMessage);
             mBiometricDialogV23.setHelpMessage(status);
         }
     }

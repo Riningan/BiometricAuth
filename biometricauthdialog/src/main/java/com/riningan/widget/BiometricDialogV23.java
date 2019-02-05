@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import androidx.annotation.NonNull;
 
 
@@ -43,8 +46,11 @@ public class BiometricDialogV23 extends BottomSheetDialog {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mLastState = STATE_NONE;
-        updateFingerprintIcon(STATE_FINGERPRINT);
+        mLastState = STATE_FINGERPRINT;
+        /*
+         * using static fingerprint icon because sometime animation work wrong
+          */
+        ivIcon.setImageResource(R.drawable.ic_fingerprint);
     }
 
 
@@ -108,7 +114,15 @@ public class BiometricDialogV23 extends BottomSheetDialog {
                 : null;
         ivIcon.setImageDrawable(icon);
         if (animation != null && shouldAnimateForTransition(mLastState, newState)) {
-//            animation.forceAnimationOnUI();
+            try {
+                @SuppressLint("PrivateApi")
+                Method method = animation.getClass().getDeclaredMethod("forceAnimationOnUI");
+                method.setAccessible(true);
+                method.invoke(animation);
+            } catch (NoSuchMethodException ignored) {
+            } catch (IllegalAccessException ignored) {
+            } catch (InvocationTargetException ignored) {
+            }
             animation.start();
         }
         mLastState = newState;
