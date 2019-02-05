@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="biometric_failed">Fingerprint not recognized</string>
+    <string name="fingerprint_dialog_failed">Not recognized</string>
+    <!-- Message shown when the system-provided fingerprint dialog is shown, asking for authentication -->
+    <string name="fingerprint_dialog_touch_sensor">Touch the fingerprint sensor</string>
 </resources>

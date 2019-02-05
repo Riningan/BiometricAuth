@@ -1,12 +1,12 @@
 package com.riningan.widget;
 
-import android.content.Context;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
 
 abstract public class BiometricManagerBase {
-    Context mContext;
+    Activity mActivity;
     String mTitle;
     String mSubtitle;
     String mDescription;
@@ -14,7 +14,7 @@ abstract public class BiometricManagerBase {
 
 
     BiometricManagerBase(final BiometricBuilder biometricBuilder) {
-        mContext = biometricBuilder.mContext;
+        mActivity = biometricBuilder.mActivity;
         mTitle = biometricBuilder.mTitle;
         mSubtitle = biometricBuilder.mSubtitle;
         mDescription = biometricBuilder.mDescription;
@@ -27,19 +27,20 @@ abstract public class BiometricManagerBase {
             biometricCallback.onSdkVersionNotSupported();
             return;
         }
-        if (!BiometricUtils.isPermissionGranted(mContext)) {
+        if (!BiometricUtils.isPermissionGranted(mActivity)) {
             biometricCallback.onBiometricAuthenticationPermissionNotGranted();
             return;
         }
-        if (!BiometricUtils.isHardwareSupported(mContext)) {
+        if (!BiometricUtils.isHardwareSupported(mActivity)) {
             biometricCallback.onBiometricAuthenticationNotSupported();
             return;
         }
-        if (!BiometricUtils.isFingerprintAvailable(mContext)) {
+        if (!BiometricUtils.isFingerprintAvailable(mActivity)) {
             biometricCallback.onBiometricAuthenticationNotAvailable();
             return;
         }
         displayBiometricDialog(biometricCallback);
+        mActivity = null;
     }
 
 

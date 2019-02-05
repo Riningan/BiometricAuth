@@ -1,20 +1,21 @@
 package com.riningan.widget;
 
-import android.content.Context;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
 
 public class BiometricBuilder {
-    Context mContext;
+    Activity mActivity;
     String mTitle;
     String mSubtitle;
     String mDescription;
     String mNegativeButtonText;
+    String mHelpMessage;
 
 
-    public BiometricBuilder(Context context) {
-        mContext = context;
+    public BiometricBuilder(Activity activity) {
+        mActivity = activity;
     }
 
 
@@ -35,6 +36,14 @@ public class BiometricBuilder {
 
     public BiometricBuilder setNegativeButtonText(@NonNull final String negativeButtonText) {
         mNegativeButtonText = negativeButtonText;
+        return this;
+    }
+
+    /**
+     * only for pre Android-P
+     */
+    public BiometricBuilder setHelpMessage(@NonNull final String helpMessage) {
+        mHelpMessage = helpMessage;
         return this;
     }
 

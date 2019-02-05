@@ -1,13 +1,16 @@
 package com.riningan.widget;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
+import android.os.Handler;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
 import android.text.TextUtils;
+import android.view.View;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -31,13 +34,18 @@ import androidx.annotation.NonNull;
 @TargetApi(Build.VERSION_CODES.M)
 public class BiometricManagerV23 extends BiometricManagerBase {
     private static final String KEY_NAME = UUID.randomUUID().toString();
+    private static final int HIDE_DIALOG_DELAY = 2000; // ms
 
 
+    private String mHelpMessage;
     private BiometricDialogV23 mBiometricDialogV23;
+
+    private Handler mResetHelpMessageHandler = new Handler();
 
 
     BiometricManagerV23(BiometricBuilder biometricBuilder) {
         super(biometricBuilder);
+        mHelpMessage = biometricBuilder.mHelpMessage;
     }
 
 
@@ -49,25 +57,38 @@ public class BiometricManagerV23 extends BiometricManagerBase {
         if (TextUtils.isEmpty(mNegativeButtonText)) {
             throw new IllegalArgumentException("Negative text must be set and non-empty");
         }
+        final String authenticationFailedText = mActivity.getString(R.string.fingerprint_dialog_failed);
 
         KeyStore keyStore = generateKey();
         Cipher cipher = initCipher(keyStore);
         if (cipher != null) {
             FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-            FingerprintManager fingerprintManager = BiometricUtils.getFingerPrintManager(mContext);
-            fingerprintManager.authenticate(cryptoObject, new CancellationSignal(), 0,
-                    new FingerprintManager.AuthenticationCallback() {
+            final CancellationSignal cancellationSignal = new CancellationSignal();
+            FingerprintManager fingerprintManager = BiometricUtils.getFingerPrintManager(mActivity);
+            fingerprintManager.authenticate(cryptoObject, cancellationSignal, 0
+                    , new FingerprintManager.AuthenticationCallback() {
                         @Override
                         public void onAuthenticationError(int errMsgId, CharSequence errString) {
                             super.onAuthenticationError(errMsgId, errString);
-                            updateStatus(String.valueOf(errString));
-                            biometricCallback.onAuthenticationError(errMsgId, errString);
+                            // ignore: Fingerprint operation canceled.
+                            if (errMsgId != 5) {
+                                setErrorMessage(String.valueOf(errString));
+                                biometricCallback.onAuthenticationError(errMsgId, errString);
+                                if (errMsgId == 9) {
+                                    mResetHelpMessageHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            dismissDialog();
+                                        }
+                                    }, HIDE_DIALOG_DELAY);
+                                }
+                            }
                         }
 
                         @Override
                         public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
                             super.onAuthenticationHelp(helpMsgId, helpString);
-                            updateStatus(String.valueOf(helpString));
+                            setHelpMessage(String.valueOf(helpString));
                             biometricCallback.onAuthenticationHelp(helpMsgId, helpString);
                         }
 
@@ -81,16 +102,31 @@ public class BiometricManagerV23 extends BiometricManagerBase {
                         @Override
                         public void onAuthenticationFailed() {
                             super.onAuthenticationFailed();
-                            updateStatus(mContext.getString(R.string.biometric_failed));
+                            setErrorMessage(authenticationFailedText);
                             biometricCallback.onAuthenticationFailed();
                         }
                     }, null);
 
-            mBiometricDialogV23 = new BiometricDialogV23(mContext, biometricCallback);
+            mBiometricDialogV23 = new BiometricDialogV23(mActivity, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismissDialog();
+                    cancellationSignal.cancel();
+                    biometricCallback.onAuthenticationCancelled();
+                }
+            });
             mBiometricDialogV23.setTitle(mTitle);
             mBiometricDialogV23.setSubtitle(mSubtitle);
             mBiometricDialogV23.setDescription(mDescription);
+            mBiometricDialogV23.setHelpMessage(mHelpMessage);
             mBiometricDialogV23.setButtonText(mNegativeButtonText);
+            mBiometricDialogV23.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    cancellationSignal.cancel();
+                    biometricCallback.onAuthenticationCancelled();
+                }
+            });
             mBiometricDialogV23.show();
         }
     }
@@ -99,12 +135,27 @@ public class BiometricManagerV23 extends BiometricManagerBase {
     private void dismissDialog() {
         if (mBiometricDialogV23 != null) {
             mBiometricDialogV23.dismiss();
+            mBiometricDialogV23 = null;
+        }
+        mResetHelpMessageHandler.removeCallbacksAndMessages(null);
+    }
+
+
+    private void setErrorMessage(String status) {
+        if (mBiometricDialogV23 != null) {
+            mBiometricDialogV23.setErrorMessage(status);
+            mResetHelpMessageHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setHelpMessage(mHelpMessage);
+                }
+            }, HIDE_DIALOG_DELAY);
         }
     }
 
-    private void updateStatus(String status) {
+    private void setHelpMessage(String status) {
         if (mBiometricDialogV23 != null) {
-            mBiometricDialogV23.updateStatus(status);
+            mBiometricDialogV23.setHelpMessage(status);
         }
     }
 

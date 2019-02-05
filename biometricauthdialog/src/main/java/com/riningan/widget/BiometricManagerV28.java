@@ -18,12 +18,12 @@ public class BiometricManagerV28 extends BiometricManagerBase {
     @Override
     @TargetApi(Build.VERSION_CODES.P)
     protected void displayBiometricDialog(@NonNull final BiometricCallback biometricCallback) {
-        new BiometricPrompt.Builder(mContext)
+        new BiometricPrompt.Builder(mActivity)
                 .setTitle(mTitle)
                 .setSubtitle(mSubtitle)
                 .setDescription(mDescription)
                 .setNegativeButton(mNegativeButtonText
-                        , mContext.getMainExecutor()
+                        , mActivity.getMainExecutor()
                         , new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -32,7 +32,7 @@ public class BiometricManagerV28 extends BiometricManagerBase {
                         })
                 .build()
                 .authenticate(new CancellationSignal()
-                        , mContext.getMainExecutor()
+                        , mActivity.getMainExecutor()
                         , new BiometricPrompt.AuthenticationCallback() {
                             @Override
                             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
