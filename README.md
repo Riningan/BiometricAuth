@@ -20,7 +20,7 @@ USAGE
 
 ```gradle
 dependencies {
-        implementation 'com.riningan.widget:biometricauthdialog:1.0'
+        implementation 'com.riningan.widget:biometricauthdialog:1.1'
 }
 ```
 

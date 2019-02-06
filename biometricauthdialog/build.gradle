@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/Riningan/BiometricAuthDialog'
     gitUrl = 'https://github.com/Riningan/BiometricAuthDialog.git'
 
-    libraryVersion = '1.0'
+    libraryVersion = '1.1'
 
     developerId = 'Riningan'
     developerName = 'Vadim Akhmarov'
@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
     implementation 'com.google.android.material:material:1.1.0-alpha03'
 }
 
