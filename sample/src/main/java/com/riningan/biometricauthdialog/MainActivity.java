@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements BiometricCallback
                         .setSubtitle(getString(R.string.biometric_subtitle))
                         .setDescription(getString(R.string.biometric_description))
                         .setNegativeButtonText(getString(android.R.string.cancel))
-                        .setHelpMessage("123 456 789")
+//                        .setHelpMessage("123 456 789")
                         .build()
                         .authenticate(MainActivity.this);
             }

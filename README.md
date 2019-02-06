@@ -1,7 +1,16 @@
 # BiometricAuthDialog
+
+[ ![Download](https://api.bintray.com/packages/riningan/AndroidMaven/BiometricAuthDialog/images/download.svg) ](https://bintray.com/riningan/AndroidMaven/BiometricAuthDialog/_latestVersion)
+
 Add Biometric Authentication Dialog to any Android app</br>
 
 This library provides an easy way to implement fingerprint authentication without having to deal with all the boilerplate stuff going on inside.
+
+
+DEMO
+---
+
+![demo_preview](./media/1.png)
 
 
 USAGE
