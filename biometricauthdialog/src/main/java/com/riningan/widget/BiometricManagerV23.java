@@ -12,6 +12,8 @@ import android.security.keystore.KeyProperties;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.riningan.widget.biometricauthdialog.R;
+
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;

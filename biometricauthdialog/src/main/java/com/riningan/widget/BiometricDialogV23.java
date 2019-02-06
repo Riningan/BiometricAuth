@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.riningan.widget.biometricauthdialog.R;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,7 +50,7 @@ public class BiometricDialogV23 extends BottomSheetDialog {
         mLastState = STATE_FINGERPRINT;
         /*
          * using static fingerprint icon because sometime animation work wrong
-          */
+         */
         ivIcon.setImageResource(R.drawable.ic_fingerprint);
     }
 
