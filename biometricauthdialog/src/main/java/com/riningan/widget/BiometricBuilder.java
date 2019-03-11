@@ -51,8 +51,10 @@ public class BiometricBuilder {
     public BiometricManagerBase build() {
         if (BiometricUtils.isBiometricPromptEnabled()) {
             return new BiometricManagerV28(this);
-        } else {
+        } else if (BiometricUtils.isSdkVersionSupported()) {
             return new BiometricManagerV23(this);
+        } else {
+            return new BiometricManagerPreV23(this);
         }
     }
 }

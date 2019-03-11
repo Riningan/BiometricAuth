@@ -20,7 +20,7 @@ USAGE
 
 ```gradle
 dependencies {
-        implementation 'com.riningan.widget:biometricauthdialog:1.1'
+        implementation 'com.riningan.widget:biometricauthdialog:1.2'
 }
 ```
 
@@ -68,6 +68,13 @@ new BiometricCallback() {
                public void onBiometricAuthenticationPermissionNotGranted() {
                       /*  
                        *  android.permission.USE_BIOMETRIC permission is not granted to the app
+                       */
+               }
+
+               @Override
+               public void onBiometricAuthenticationNoService() {
+                      /*  
+                       *  No FINGERPRINT_SERVICE
                        */
                }
 

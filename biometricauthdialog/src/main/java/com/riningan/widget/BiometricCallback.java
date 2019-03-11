@@ -18,6 +18,11 @@ public interface BiometricCallback {
     void onBiometricAuthenticationNotAvailable();
 
     /**
+     * No FINGERPRINT_SERVICE
+     */
+    void onBiometricAuthenticationNoService();
+
+    /**
      * android.permission.USE_BIOMETRIC permission is not granted to the app
      * or android.permission.USE_FINGERPRINT permission is not granted to the app
      */

@@ -56,6 +56,11 @@ public class MainActivity extends AppCompatActivity implements BiometricCallback
     }
 
     @Override
+    public void onBiometricAuthenticationNoService() {
+        Toast.makeText(getApplicationContext(), getString(R.string.biometric_error_permission_no_service), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onAuthenticationFailed() {
         Toast.makeText(getApplicationContext(), getString(R.string.biometric_failure), Toast.LENGTH_SHORT).show();
     }

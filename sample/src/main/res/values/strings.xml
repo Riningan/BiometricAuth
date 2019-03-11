@@ -11,6 +11,7 @@
     <string name="biometric_error_hardware_not_supported">Device does not support biometric authentication</string>
     <string name="biometric_error_fingerprint_not_available">Fingerprint is not registered in device</string>
     <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
+    <string name="biometric_error_permission_no_service">No FINGERPRINT_SERVICE</string>
     <string name="biometric_failure">Login not successful!</string>
     <string name="biometric_cancelled">Authentication cancelled by user</string>
     <string name="biometric_success">Login Successful</string>

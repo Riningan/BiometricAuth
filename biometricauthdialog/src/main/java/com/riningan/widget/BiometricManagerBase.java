@@ -22,13 +22,17 @@ abstract public class BiometricManagerBase {
     }
 
 
-    public void authenticate(@NonNull final BiometricCallback biometricCallback) {
+    public final void authenticate(@NonNull final BiometricCallback biometricCallback) {
         if (!BiometricUtils.isSdkVersionSupported()) {
             biometricCallback.onSdkVersionNotSupported();
             return;
         }
         if (!BiometricUtils.isPermissionGranted(mActivity)) {
             biometricCallback.onBiometricAuthenticationPermissionNotGranted();
+            return;
+        }
+        if (BiometricUtils.getFingerPrintManager(mActivity) == null) {
+            biometricCallback.onBiometricAuthenticationNoService();
             return;
         }
         if (!BiometricUtils.isHardwareSupported(mActivity)) {
